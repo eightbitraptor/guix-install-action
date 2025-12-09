@@ -60,11 +60,11 @@ runs:
       shell: bash
       name: Set LANG
     - run: |
-        wget -nv https://ci.guix.gnu.org/search/latest/archive?query=spec:tarball+status:success+system:x86_64-linux+guix-binary.tar.xz -O guix-binary-nightly.x86_64-linux.tar.xz
+        wget -nv https://ftpmirror.gnu.org/gnu/guix/guix-binary-1.4.0.x86_64-linux.tar.xz -O guix-binary-1.4.0.x68_64-linux.tar.xz
       shell: bash
       name: Download
     - run: |
-        sudo -- tar --extract --file "guix-binary-nightly.x86_64-linux.tar.xz" -C / --no-overwrite-dir
+        sudo -- tar --extract --file "guix-binary-1.4.0.x86_64-linux.tar.xz" -C / --no-overwrite-dir
         sudo -- groupadd --system guixbuild
 
         for i in $(seq -w 1 10); do
