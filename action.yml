@@ -60,7 +60,7 @@ runs:
       shell: bash
       name: Set LANG
     - run: |
-        wget -nv https://ftpmirror.gnu.org/gnu/guix/guix-binary-1.4.0.x86_64-linux.tar.xz -O guix-binary-1.4.0.x68_64-linux.tar.xz
+        curl -OL https://ftpmirror.gnu.org/gnu/guix/guix-binary-1.4.0.x86_64-linux.tar.xz
       shell: bash
       name: Download
     - run: |
