@@ -19,8 +19,8 @@ showcases the available options.
 Inputs
 ------
 
-:channels:
-    A Scheme expression that describes the Guix channels to use. See `manual
+:channels-file:
+    Path to a Guix channels file containing Scheme code. See `manual
     <https://guix.gnu.org/manual/devel/en/guix.html#Specifying-Additional-Channels>`__
 :pullAfterInstall:
     Run `guix pull` after installing Guix. If set to `false` the latest

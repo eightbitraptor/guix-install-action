@@ -4,12 +4,9 @@ branding:
   icon: 'package'
   color: 'gray-dark'
 inputs:
-  channels:
-    description: 'Guix channel description as Scheme code'
+  channels-file:
+    description: 'Path to a Guix channels file (Scheme code)'
     required: false
-    # Use the GitHub mirror to decrease load on Savannah.
-    default: |-
-      %default-channels
   service-file:
     description: 'Old service file based on privileged execution.'
     required: false
@@ -94,16 +91,23 @@ runs:
     - run: sudo /var/guix/profiles/per-user/root/current-guix/bin/guix archive --generate-key
       shell: bash
       name: Generate keys
-    - run: |
-        cat <<EOF > ${{ runner.temp }}/channels.scm
-        ${{ inputs.channels }}
-        EOF
+    - name: Validate channels file
+      if: ${{ inputs.channels-file }}
       shell: bash
-      name: Create channel file
-    - run: sudo /var/guix/profiles/per-user/root/current-guix/bin/guix pull --fallback -C ${{ runner.temp }}/channels.scm
-      shell: bash
-      name: Update Guix
+      run: |
+        if [ ! -f "${{ inputs.channels-file }}" ]; then
+          echo "::error::channels-file '${{ inputs.channels-file }}' does not exist"
+          exit 1
+        fi
+    - name: Update Guix
       if: ${{ inputs.pullAfterInstall == 'true' }}
+      shell: bash
+      run: |
+        if [ -n "${{ inputs.channels-file }}" ]; then
+          sudo /var/guix/profiles/per-user/root/current-guix/bin/guix pull --fallback -C "${{ inputs.channels-file }}"
+        else
+          sudo /var/guix/profiles/per-user/root/current-guix/bin/guix pull --fallback
+        fi
     # Substitute newlines to work-around GitHubs single-line limitation.
     - run: |
         echo "channels=$(/var/guix/profiles/per-user/root/current-guix/bin/guix describe -f channels | tr '\n' ' ')" >> $GITHUB_OUTPUT
